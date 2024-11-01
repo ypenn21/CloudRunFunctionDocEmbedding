@@ -19,7 +19,6 @@ public class DocumentEmbeddingFunction implements HttpFunction {
   // ... other methods and dependencies ...
 
   @Override
-  @Override
   public void service(HttpRequest request, HttpResponse response) throws IOException {
     try {
       logger.info("Received request: " + request);
