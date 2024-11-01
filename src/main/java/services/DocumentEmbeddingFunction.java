@@ -8,30 +8,39 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class DocumentEmbeddingFunction implements HttpFunction {
 
+  private static final Logger logger = Logger.getLogger(DocumentEmbeddingFunction.class.getName());
   private static final DataAccess dao = new DataAccess();
 
 
   // ... other methods and dependencies ...
 
   @Override
+  @Override
   public void service(HttpRequest request, HttpResponse response) throws IOException {
     try {
+      logger.info("Received request: " + request);
+
       // Get request body as a Map
       String requestBody = getRequestBodyAsString(request);
+      logger.info("Request body: " + requestBody);
 
-      // 2. Parse the JSON string into a Map
+      // Parse the JSON string into a Map
       Map<String, Object> body = parseJsonToMap(requestBody);
+      logger.info("Parsed request body: " + body);
 
-      // Get document name and bucket
+      // Get document name
       String fileName = (String) body.get("fileName");
-      //      String bucketName = (String) body.get("bucket");
+      logger.info("Processing file: " + fileName);
+
       insertBook(fileName);
-      // ... your embedding logic using fileName and bucketName ...
       response.setStatusCode(200);
+      logger.info("Successfully processed the request");
     } catch (Exception e) {
+      logger.severe("Error processing request: " + e.getMessage());
       response.setStatusCode(500);
       response.getWriter().write("Invalid JSON request body");
     }
@@ -45,6 +54,8 @@ public class DocumentEmbeddingFunction implements HttpFunction {
         stringBuilder.append(line);
       }
     }
+    logger.info("Constructed request body string: " + stringBuilder.toString());
+
     return stringBuilder.toString();
   }
 
@@ -57,12 +68,13 @@ public class DocumentEmbeddingFunction implements HttpFunction {
     }
 
     jsonString = jsonString.trim();
-
+    logger.info("jsonString: " + jsonString);
     // Remove opening and closing curly braces
     if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
       jsonString = jsonString.substring(1, jsonString.length() - 1);
     }
 
+    logger.info("jsonString: " + jsonString);
     // Split into key-value pairs
     String[] keyValuePairs = jsonString.split(",");
 
