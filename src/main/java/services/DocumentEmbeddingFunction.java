@@ -51,8 +51,36 @@ public class DocumentEmbeddingFunction implements HttpFunction {
   // Helper function to parse a JSON string into a Map
   private Map<String, Object> parseJsonToMap(String jsonString) {
     Map<String, Object> map = new HashMap<>();
-    // Implementation for parsing JSON string without Gson
-    // ... (You'll need to implement your own logic here) ...
+
+    if (jsonString == null || jsonString.trim().isEmpty()) {
+      return map; // Return empty map for null or empty input
+    }
+
+    jsonString = jsonString.trim();
+
+    // Remove opening and closing curly braces
+    if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
+      jsonString = jsonString.substring(1, jsonString.length() - 1);
+    }
+
+    // Split into key-value pairs
+    String[] keyValuePairs = jsonString.split(",");
+
+    for (String keyValuePair : keyValuePairs) {
+      keyValuePair = keyValuePair.trim();
+      // Split key and value by colon
+      String[] parts = keyValuePair.split(":");
+      if (parts.length == 2) {
+        String key = parts[0].trim();
+        String value = parts[1].trim();
+
+        // Remove quotes from key and value if present
+        key = key.replaceAll("^\"|\"$", "");
+        value = value.replaceAll("^\"|\"$", "");
+
+        map.put(key, value);
+      }
+    }
     return map;
   }
 
