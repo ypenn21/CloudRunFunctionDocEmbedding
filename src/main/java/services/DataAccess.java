@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 public class DataAccess {
     public DataSource getDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        String alloyURI = System.getenv("alloydb.uri");
-        String user = System.getenv("alloydb.user");
-        String pass = System.getenv("alloydb.password");
-        String db = System.getenv("alloydb.db");
+        String alloyURI = System.getenv("alloydb_uri");
+        String user = System.getenv("alloydb_user");
+        String pass = System.getenv("alloydb_password");
+        String db = System.getenv("alloydb_db");
         dataSource.setServerNames(new String[]{alloyURI});
         dataSource.setDatabaseName(db);
         dataSource.setUser(user);
