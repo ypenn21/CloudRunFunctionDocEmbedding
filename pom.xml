@@ -49,7 +49,7 @@
         <artifactId>function-maven-plugin</artifactId>
         <version>0.11.0</version>
         <configuration>
-          <functionTarget>functions-document-embedding</functionTarget>
+          <functionTarget>functions.DocumentEmbeddingFunction</functionTarget>
         </configuration>
       </plugin>
     </plugins>
