@@ -18,12 +18,8 @@ import org.postgresql.ds.PGSimpleDataSource;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class DataAccess {
     public DataSource getDataSource() {
@@ -83,11 +79,12 @@ public class DataAccess {
     }
 
     public Integer insertBook(Integer authorId, String title, String year, ScopeType publicPrivate) throws SQLException {
+        LocalDate publicationYear = LocalDate.parse(year);
         String sql = "INSERT INTO books (author_id, publication_year, title, scope) VALUES (?, ?, ?, CAST(? AS scope_type)) RETURNING book_id";
         try (Connection conn = getDataSource().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, authorId);
-            stmt.setString(2, year);
+            stmt.setObject(2, publicationYear);
             stmt.setString(3, title);
             stmt.setString(4, publicPrivate.getValue());
             try (ResultSet rs = stmt.executeQuery()) {
